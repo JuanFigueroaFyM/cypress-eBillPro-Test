@@ -1,0 +1,14 @@
+# Dependencias
+node_modules/
+
+# Cypress — artefactos de ejecución
+cypress/screenshots/
+cypress/videos/
+cypress/reports/
+cypress/downloads/
+
+# Variables de entorno locales
+.env
+.env.local
+.DS_Store
+EOF

@@ -1,0 +1,18 @@
+{
+  "valid": {
+    "username": "cinecolombiatest",
+    "password": "soporte@1"
+  },
+  "invalid_user": {
+    "username": "usuario_que_no_existe",
+    "password": "soporte@1"
+  },
+  "invalid_password": {
+    "username": "cinecolombiatest",
+    "password": "contraseña_incorrecta"
+  },
+  "empty": {
+    "username": " ",
+    "password": " "
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "cypress-login-ebill",
+  "version": "1.0.0",
+  "description": "Pruebas E2E de autenticación — eBill Pro Go",
+  "private": true,
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:run:headless": "cypress run --headless --browser chrome",
+    "cy:report": "cypress run && echo 'Reporte generado en cypress/reports/'"
+  },
+  "devDependencies": {
+    "cypress": "^13.0.0",
+    "cypress-mochawesome-reporter": "^3.8.4",
+    "mochawesome": "^7.1.4",
+    "mochawesome-merge": "^4.4.1",
+    "mochawesome-report-generator": "^6.3.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "diff": "^9.0.0",
+    "serialize-javascript": "^7.0.5"
+  }
+}
