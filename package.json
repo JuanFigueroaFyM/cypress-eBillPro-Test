@@ -7,20 +7,17 @@
     "cy:open": "cypress open",
     "cy:run": "cypress run",
     "cy:run:headless": "cypress run --headless --browser chrome",
-    "cy:report": "cypress run && echo 'Reporte generado en cypress/reports/'"
+    "cy:report": "cypress run && echo '✅ Reporte generado en cypress/reports/'",
+    "cy:record": "cypress run --record --key $CYPRESS_RECORD_KEY"
   },
   "devDependencies": {
     "cypress": "^13.0.0",
-    "cypress-mochawesome-reporter": "^3.8.4",
-    "mochawesome": "^7.1.4",
-    "mochawesome-merge": "^4.4.1",
-    "mochawesome-report-generator": "^6.3.2"
+    "cypress-mochawesome-reporter": "^3.8.0",
+    "mochawesome": "^7.1.3",
+    "mochawesome-merge": "^4.3.0",
+    "mochawesome-report-generator": "^6.2.0"
   },
   "engines": {
     "node": ">=18.0.0"
-  },
-  "dependencies": {
-    "diff": "^9.0.0",
-    "serialize-javascript": "^7.0.5"
   }
 }
