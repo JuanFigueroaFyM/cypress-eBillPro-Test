@@ -15,7 +15,7 @@ module.exports = defineConfig({
     inlineAssets: true,           // reporte HTML autocontenido (un solo archivo)
     saveAllAttempts: false,       // solo el último intento por test
     reportPageTitle: 'eBill Pro — Reporte de Pruebas E2E',
-    reportTitle: 'Suite: Autenticación',
+    reportTitle: 'Suite: Autenticación + Documentos',
   },
 
   e2e: {

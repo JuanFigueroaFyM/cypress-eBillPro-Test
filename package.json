@@ -1,12 +1,14 @@
 {
-  "name": "cypress-login-ebill",
-  "version": "1.0.0",
-  "description": "Pruebas E2E de autenticación — eBill Pro Go",
+  "name": "cypress-ebillpro-test",
+  "version": "1.1.0",
+  "description": "Pruebas E2E — eBill Pro Go (Autenticación + Documentos)",
   "private": true,
   "scripts": {
     "cy:open": "cypress open",
     "cy:run": "cypress run",
     "cy:run:headless": "cypress run --headless --browser chrome",
+    "cy:run:auth": "cypress run --spec 'cypress/e2e/auth/**/*.cy.js'",
+    "cy:run:docs": "cypress run --spec 'cypress/e2e/documents/**/*.cy.js'",
     "cy:report": "cypress run && echo '✅ Reporte generado en cypress/reports/'",
     "cy:record": "cypress run --record --key $CYPRESS_RECORD_KEY"
   },

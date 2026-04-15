@@ -1,7 +1,7 @@
-# 🧪 cypress-login-ebill
+# 🧪 cypress-ebillpro-test
 
-Proyecto de pruebas **E2E automatizadas** para el módulo de autenticación de **eBill Pro Go** (`/auth`).  
-Desarrollado con [Cypress 13](https://cypress.io) bajo el estándar del equipo de SQA de fymtech.
+Proyecto de pruebas **E2E automatizadas** para **eBill Pro Go** (`ebillprogotest.facturaenlinea.co`).  
+Desarrollado con [Cypress 13](https://cypress.io) + Mochawesome Reporter bajo el estándar del equipo de SQA de fymtech.
 
 ---
 
@@ -33,40 +33,41 @@ Desarrollado con [Cypress 13](https://cypress.io) bajo el estándar del equipo d
 ## Instalación
 
 ```bash
-# 1. Clonar el repositorio
-git clone <url-del-repo>
-cd cypress-login-ebill
+# 1. Descomprimir / clonar el proyecto
+cd cypress-ebillpro-test
 
-# 2. Instalar dependencias (incluye Cypress + reporter Mochawesome)
+# 2. Instalar dependencias (Cypress + Mochawesome)
 npm install
 ```
 
-La primera vez que se ejecuten las pruebas, Cypress descargará su binario automáticamente (~300 MB). Esto solo ocurre una vez.
+La primera vez Cypress descargará su binario (~300 MB). Ocurre solo una vez.
 
 ---
 
 ## Estructura del proyecto
 
 ```
-cypress-login-ebill/
+cypress-ebillpro-test/
 │
 ├── cypress/
 │   ├── e2e/
-│   │   └── auth/
-│   │       └── login.cy.js          # Suite de pruebas de autenticación
+│   │   ├── auth/
+│   │   │   └── login.cy.js          # TC-AUTH-001 a 007
+│   │   └── documents/
+│   │       └── documentos.cy.js     # TC-DOC-001 a 007
 │   │
 │   ├── fixtures/
-│   │   └── users.json               # Datos de prueba (credenciales)
+│   │   ├── users.json               # Credenciales de prueba
+│   │   └── documents.json           # Datos de búsqueda y filtros
 │   │
-│   ├── reports/                     # Reportes HTML generados (gitignore recomendado)
-│   │
+│   ├── reports/                     # Reportes HTML generados (gitignore)
 │   ├── screenshots/                 # Capturas automáticas en fallos
 │   │
 │   └── support/
-│       ├── commands.js              # Comandos personalizados (cy.fillLogin, etc.)
+│       ├── commands.js              # cy.fillLogin, cy.loginExitoso, cy.buscarPorPrefijo…
 │       └── e2e.js                   # Setup global + registro del reporter
 │
-├── cypress.config.js                # Configuración principal de Cypress
+├── cypress.config.js                # Configuración + Mochawesome + Cypress Cloud
 ├── package.json
 └── README.md
 ```
@@ -75,39 +76,24 @@ cypress-login-ebill/
 
 ## Configuración de credenciales
 
-Las credenciales se gestionan en **dos lugares**. Ambos deben mantenerse sincronizados:
-
 ### `cypress/fixtures/users.json`
-Define los tres escenarios de usuario usados en los tests:
-
 ```json
 {
-  "valid": {
-    "username": "usuario_valido",
-    "password": "contraseña_valida"
-  },
-  "invalid_user": {
-    "username": "usuario_que_no_existe",
-    "password": "cualquier_contraseña"
-  },
-  "invalid_password": {
-    "username": "usuario_valido",
-    "password": "contraseña_incorrecta"
-  }
+  "valid":            { "username": "cinecolombiatest", "password": "soporte@1" },
+  "invalid_user":     { "username": "usuario_que_no_existe", "password": "soporte@1" },
+  "invalid_password": { "username": "cinecolombiatest", "password": "contraseña_incorrecta" }
 }
 ```
 
-### `cypress.config.js` → sección `env`
-Usadas por el comando `cy.loginExitoso()`:
-
+### `cypress.config.js` → `env`
 ```js
 env: {
-  USERNAME: 'usuario_valido',
-  PASSWORD: 'contraseña_valida',
+  USERNAME: 'cinecolombiatest',
+  PASSWORD: 'soporte@1',
 }
 ```
 
-> ⚠️ **No commitear credenciales reales.** Para ambientes CI/CD, inyectar via variables de entorno:
+> ⚠️ **No commitear credenciales reales.** Para CI/CD inyectar via variables de entorno:
 > ```bash
 > cypress run --env USERNAME=mi_usuario,PASSWORD=mi_pass
 > ```
@@ -116,53 +102,35 @@ env: {
 
 ## Ejecución de pruebas
 
-### Modo headless (recomendado para SQA — genera reporte automáticamente)
-```bash
-npm run cy:run
-```
+| Comando | Descripción |
+|---|---|
+| `npm run cy:open` | Modo interactivo (Test Runner visual) |
+| `npm run cy:run` | Todos los specs + genera reporte HTML |
+| `npm run cy:run:auth` | Solo módulo de Autenticación |
+| `npm run cy:run:docs` | Solo módulo de Documentos |
+| `npm run cy:run:headless` | Headless Chrome explícito |
+| `npm run cy:record` | Ejecuta y graba en Cypress Cloud |
 
-### Modo headless con Chrome
-```bash
-npm run cy:run:headless
-```
-
-### Modo interactivo (para desarrollo y debugging)
-```bash
-npm run cy:open
-```
-
-> En modo interactivo (`cy:open`) el reporte HTML **no** se genera. Es exclusivo del modo `cy:run`.
+> En modo `cy:open` el reporte HTML **no** se genera. Es exclusivo de `cy:run`.
 
 ---
 
 ## Reportes de evidencia
 
-Al finalizar cada ejecución con `npm run cy:run`, se genera automáticamente un reporte HTML en:
+Al finalizar `npm run cy:run` se genera automáticamente:
 
 ```
 cypress/reports/
-└── [fecha]-[hora]-[estado]-report.html
-    Ejemplo: 2026-04-13-14-30-passed-report.html
+└── 2026-04-15-10-30-passed-report.html   ← un archivo autocontenido por ejecución
 ```
 
-### Contenido del reporte
-
-- **Gráfica resumen** (donut) con conteo de passed / failed / pending
-- **Duración** total e individual por caso de prueba
-- **Detalle expandible** por cada TC con pasos ejecutados
-- **Screenshots embebidos** automáticamente en los tests fallidos
-- Archivo **autocontenido** (un solo `.html`, sin dependencias externas) — listo para compartir por correo o Teams
-
-### Historial de ejecuciones
-
-Cada ejecución genera un archivo con timestamp único. Los reportes **no se sobrescriben**, permitiendo mantener un historial por fecha de ejecución del plan de pruebas.
+Cada reporte incluye: gráfica de resultados, duración por caso, pasos ejecutados y screenshots embebidos de los tests fallidos. Los archivos tienen timestamp único y **no se sobrescriben** (historial por fecha).
 
 ---
 
 ## Casos de prueba
 
-Suite: **Autenticación — `/auth`**  
-Archivo: `cypress/e2e/auth/login.cy.js`
+### Módulo: Autenticación — `cypress/e2e/auth/login.cy.js`
 
 | ID | Descripción | Tipo |
 |---|---|---|
@@ -170,9 +138,21 @@ Archivo: `cypress/e2e/auth/login.cy.js`
 | TC-AUTH-002 | Usuario inexistente muestra error sin revelar detalles | ❌ Negativo |
 | TC-AUTH-003 | Contraseña incorrecta muestra mensaje de error | ❌ Negativo |
 | TC-AUTH-004 | Submit con campos vacíos no llama al servidor | 🔲 Validación frontend |
-| TC-AUTH-005 | El campo de contraseña es de tipo `password` (no texto plano) | 🔒 Seguridad |
+| TC-AUTH-005 | El campo contraseña es de tipo `password` | 🔒 Seguridad |
 | TC-AUTH-006 | La sesión persiste al recargar la página (F5) | 🔄 Persistencia |
 | TC-AUTH-007 | Logout limpia la sesión y redirige al login | 🚪 Cierre de sesión |
+
+### Módulo: Documentos — `cypress/e2e/documents/documentos.cy.js`
+
+| ID | Descripción | Tipo |
+|---|---|---|
+| TC-DOC-001 | Buscar sin prefijo muestra campo obligatorio | 🔲 Validación |
+| TC-DOC-002 | Buscar con prefijo válido retorna documentos | ✅ Happy path |
+| TC-DOC-003 | Buscar con prefijo inexistente muestra estado vacío | ❌ Negativo |
+| TC-DOC-004 | La tabla tiene las columnas esperadas (Número, Cliente, Fecha, Total) | 🔲 Estructura |
+| TC-DOC-005 | El filtro por nombre de cliente acota los resultados | 🔍 Filtros |
+| TC-DOC-006 | Los filtros avanzados (fecha, tipo) están disponibles | 🔍 Filtros |
+| TC-DOC-007 | Hacer click en un documento abre su detalle | ✅ Navegación |
 
 ---
 
@@ -181,25 +161,23 @@ Archivo: `cypress/e2e/auth/login.cy.js`
 Definidos en `cypress/support/commands.js`:
 
 ### `cy.fillLogin(username, password)`
-Llena el formulario de login y hace submit. Usado en la mayoría de los tests.
-
-```js
-cy.fillLogin('mi_usuario', 'mi_contraseña');
-```
+Llena el formulario de login y hace submit.
 
 ### `cy.loginExitoso()`
-Realiza login completo con las credenciales definidas en `cypress.config.js → env` y espera a que el dashboard cargue. Útil como precondición en suites futuras.
+Login completo con credenciales del `env`. Usa `cy.session()` con `cacheAcrossSpecs: true` — la sesión se establece una sola vez y se reutiliza en toda la suite, evitando logins repetidos entre specs.
 
-```js
-cy.loginExitoso();
-// → El usuario ya está autenticado y en el dashboard
-```
+### `cy.irADocumentos()`
+Navega a `/invoices` y espera que la lista cargue.
+
+### `cy.buscarPorPrefijo(prefijo)`
+Ingresa un prefijo en el campo de búsqueda y ejecuta la búsqueda.
 
 ---
 
 ## Notas técnicas
 
-- **Base URL:** `https://ebillprogotest.facturaenlinea.co` (ambiente de pruebas)
-- **Reintentos:** 1 reintento automático en modo `run` para reducir falsos negativos por latencia de red
-- **Errores suprimidos:** Los errores del widget FreshChat (tercero) están ignorados globalmente para no contaminar los resultados de los tests
-- **Viewport:** 1280×800px fijo para consistencia visual en screenshots
+- **Base URL:** `https://ebillprogotest.facturaenlinea.co` (ambiente TEST)
+- **Cypress Cloud:** `projectId: jt9552`
+- **Reintentos:** 1 reintento automático en `runMode` para reducir falsos negativos
+- **FreshChat:** errores del widget de tercero suprimidos globalmente
+- **Viewport:** 1280×800 px fijo para consistencia visual en screenshots

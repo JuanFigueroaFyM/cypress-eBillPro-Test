@@ -1,0 +1,11 @@
+{
+  "busqueda": {
+    "prefijo_valido": "SETT",
+    "numero_valido": "3456",
+    "prefijo_inexistente": "ZZZZ",
+    "numero_inexistente": "99999",
+    "nombre_cliente": "consumidor"
+  },
+  "columnas": ["Documento", "Cliente", "Monto", "Fecha", "Estado", "Acciones"],
+  "tipos_documento": ["Factura", "Nota Crédito", "Nota Débito"]
+}

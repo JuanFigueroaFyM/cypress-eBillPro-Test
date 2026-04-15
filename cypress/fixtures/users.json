@@ -10,9 +10,5 @@
   "invalid_password": {
     "username": "cinecolombiatest",
     "password": "contraseña_incorrecta"
-  },
-  "empty": {
-    "username": " ",
-    "password": " "
   }
 }
