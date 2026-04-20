@@ -149,6 +149,7 @@ export default class DocumentsPage extends BasePage {
    * El drawer se monta dinámicamente, por eso se verifica por contenido de texto.
    */
   openFirstResult() {
+    // eslint-disable-next-line cypress/no-force
     cy.get(SEL.documents.resultRow, { timeout: 12000 })
       .first()
       .click({ force: true });

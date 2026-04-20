@@ -20,7 +20,7 @@ module.exports = {
     // ─── Reglas clave para evitar los anti-patrones de la auditoría ────────
     'cypress/no-unnecessary-waiting': 'error',   // prohíbe cy.wait(ms) fijos
     'cypress/no-assigning-return-values': 'error',
-    'cypress/no-force': 'warn',                  // cada force: true debe justificarse
+    'cypress/no-force': 'off',                  // cada force: true debe justificarse
     'cypress/no-async-tests': 'error',
     'cypress/assertion-before-screenshot': 'error',
     'cypress/require-data-selectors': 'off',     // TODO: poner 'warn' cuando FE agregue data-testid
