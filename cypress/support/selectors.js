@@ -167,64 +167,72 @@ export const SEL = {
     ),
   },
 
-  // ─── Módulo Clientes ──────────────────────────────────────────────────────
-  // NOTA: el frontend actual no tiene data-testid en filas ni tabla. Los
-  // fallbacks cubren PrimeVue DataTable (.p-datatable-tbody > tr) y la
-  // convención estándar de <tbody><tr>. El Page Object aplica .first() donde
-  // pueda haber múltiples coincidencias.
-  clients: {
-    listTable: combine(
-      '[data-testid="clients-table"]',
-      '.p-datatable',
-      '[role="grid"]',
-    ),
-    searchInput: combine(
-      '[data-testid="clients-search"]',
-      'input[placeholder*="identificaci"]',
-      'input[placeholder*="buscar"]',
-      'input[placeholder*="nombre"]',
-      'input[placeholder*="cliente"]',
-      'input[placeholder*="email"]',
-    ),
-    newBtn: '[data-testid="clients-new"]',          // fallback vía texto en ClientsPage
-    row: combine(
-      '[data-testid^="client-row-"]',
-      '.p-datatable-tbody > tr',
-      'tbody tr',
-    ),
-    rowByNit: (nit) => `[data-testid="client-row-${nit}"]`, // fallback vía cy.contains en ClientsPage
-    totalCount: '[data-testid="clients-total-count"]',
-    emptyState: combine(
-      '[data-testid="clients-empty"]',
-      '.p-datatable-emptymessage',
-      '[class*="empty-state"]',
-      '[class*="emptyState"]',
-    ),
+clients: {
+  listTable: combine(
+    '[data-testid="clients-table"]',
+    'div[class*="card"]',
+    'div[class*="rounded"]'
+  ),
 
-    detailModal: combine(
-      '[data-testid="client-detail-modal"]',
-      '.p-dialog',
-      '[role="dialog"]',
-    ),
-    detailTitle: combine(
-      '[data-testid="client-detail-title"]',
-      '.p-dialog-title',
-    ),
-    detailClose: combine(
-      '[data-testid="client-detail-close"]',
-      '.p-dialog-header-close',
-      'button[aria-label*="close"]',
-      'button[aria-label*="cerrar"]',
-    ),
+  searchInput: combine(
+    '[data-testid="clients-search"]',
+    'input[placeholder*="identificaci"]',
+    'input[placeholder*="buscar"]',
+    'input[placeholder*="cliente"]',
+    'input[placeholder*="email"]'
+  ),
 
-    form: {
-      root: '[data-testid="client-form"]',
-      nit: '[data-testid="client-form-nit"]',
-      name: '[data-testid="client-form-name"]',
-      email: '[data-testid="client-form-email"]',
-      submit: '[data-testid="client-form-submit"]',
-    },
+  newBtn: combine(
+    '[data-testid="clients-new"]',
+    'button:contains("Nuevo Cliente")'
+  ),
+
+  // 🔥 ESTE ES EL CAMBIO CLAVE
+  row: combine(
+    '[data-testid^="client-row-"]', // futuro
+    'div.group.cursor-pointer',     // REAL
+    'div[class*="cursor-pointer"][class*="grid"]'
+  ),
+
+  // fallback inteligente (no depende de data-testid)
+  rowByNit: (nit) => `div.group:contains("${nit}")`,
+
+  totalCount: combine(
+    '[data-testid="clients-total-count"]',
+    'p:contains("clientes")'
+  ),
+
+  emptyState: combine(
+    '[data-testid="clients-empty"]',
+    'p:contains("clientes")',
+    'div:contains("sin")',
+    'div:contains("No hay")'
+  ),
+
+  detailModal: combine(
+    '[data-testid="client-detail-modal"]',
+    '[role="dialog"]'
+  ),
+
+  detailTitle: combine(
+    '[data-testid="client-detail-title"]',
+    'h1, h2'
+  ),
+
+  detailClose: combine(
+    '[data-testid="client-detail-close"]',
+    'button[aria-label*="close"]',
+    'button[aria-label*="cerrar"]'
+  ),
+
+  form: {
+    root: '[data-testid="client-form"]',
+    nit: '[data-testid="client-form-nit"]',
+    name: '[data-testid="client-form-name"]',
+    email: '[data-testid="client-form-email"]',
+    submit: '[data-testid="client-form-submit"]',
   },
+},
 
   // ─── Módulo Productos ─────────────────────────────────────────────────────
   products: {
