@@ -30,31 +30,27 @@ class ClientsPage {
 
       expect(
         bodyText.includes(search) || // encontró el cliente
-        bodyText.includes('sin resultado') ||
-        bodyText.includes('no se encontr') ||
-        !hasRows // no hay filas → válido
+          bodyText.includes('sin resultado') ||
+          bodyText.includes('no se encontr') ||
+          !hasRows, // no hay filas → válido
       ).to.be.true;
     });
 
     return this;
-}
+  }
 
   // ========================
   // BUSCADOR
   // ========================
   search(text) {
-    cy.get(SEL.clients.searchInput)
-      .clear()
-      .type(text);
+    cy.get(SEL.clients.searchInput).clear().type(text);
   }
 
   // ========================
   // DETALLE (CLICK)
   // ========================
   openDetailByNit(nit) {
-    cy.contains(SEL.clients.row, nit)
-      .should('be.visible')
-      .click();
+    cy.contains(SEL.clients.row, nit).should('be.visible').click();
   }
 
   // ========================
@@ -76,9 +72,9 @@ class ClientsPage {
 
       expect(
         text.includes('sin resultado') ||
-        text.includes('no se encontr') ||
-        text.includes('0 cliente') ||
-        !hasRows
+          text.includes('no se encontr') ||
+          text.includes('0 cliente') ||
+          !hasRows,
       ).to.be.true;
     });
 

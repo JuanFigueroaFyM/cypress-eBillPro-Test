@@ -42,9 +42,10 @@ describe('Documentos — /invoices', { tags: ['@documents', '@smoke'] }, () => {
       cy.get('body', { timeout: 10000 }).should('satisfy', ($b) => {
         const text = $b.text().toLowerCase();
         const clientLower = busqueda.nombreCliente.toLowerCase();
-        const hasRows = $b.find(
-          '[data-testid^="doc-row-"], div[class*="cursor-pointer"][class*="animate-fade-in"]'
-        ).length > 0;
+        const hasRows =
+          $b.find(
+            '[data-testid^="doc-row-"], div[class*="cursor-pointer"][class*="animate-fade-in"]',
+          ).length > 0;
 
         return (
           text.includes(clientLower) ||
@@ -74,9 +75,10 @@ describe('Documentos — /invoices', { tags: ['@documents', '@smoke'] }, () => {
 
       cy.get('body', { timeout: 10000 }).should('satisfy', ($b) => {
         const text = $b.text().toLowerCase();
-        const hasRows = $b.find(
-          '[data-testid^="doc-row-"], div[class*="cursor-pointer"][class*="animate-fade-in"]'
-        ).length > 0;
+        const hasRows =
+          $b.find(
+            '[data-testid^="doc-row-"], div[class*="cursor-pointer"][class*="animate-fade-in"]',
+          ).length > 0;
 
         return (
           text.includes('sin resultado') ||
@@ -104,9 +106,10 @@ describe('Documentos — /invoices', { tags: ['@documents', '@smoke'] }, () => {
 
       cy.get('body', { timeout: 10000 }).should('satisfy', ($b) => {
         const text = $b.text().toLowerCase();
-        const hasFilteredRows = $b.find(
-          '[data-testid^="doc-row-"], div[class*="cursor-pointer"][class*="animate-fade-in"]'
-        ).length > 0;
+        const hasFilteredRows =
+          $b.find(
+            '[data-testid^="doc-row-"], div[class*="cursor-pointer"][class*="animate-fade-in"]',
+          ).length > 0;
 
         return (
           text.includes(busqueda.nombreCliente.toLowerCase()) ||
@@ -128,7 +131,7 @@ describe('Documentos — /invoices', { tags: ['@documents', '@smoke'] }, () => {
     // NOTA: No usar flag " i" en selectores CSS — Sizzle no lo soporta.
     cy.get(
       '[data-testid="doc-search-number"], input[placeholder="INV-2025-001"], input[name="numeroDocumento"]',
-      { timeout: 8000 }
+      { timeout: 8000 },
     ).should('be.visible');
   });
 

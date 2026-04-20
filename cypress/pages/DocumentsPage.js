@@ -114,11 +114,7 @@ export default class DocumentsPage extends BasePage {
 
     this.openFiltersPanel();
 
-    cy.get(SEL.documents.docNumberInput)
-      .first()
-      .clear()
-      .type(query)
-      .type('{enter}');
+    cy.get(SEL.documents.docNumberInput).first().clear().type(query).type('{enter}');
 
     // Espera breve para que la lista reaccione (debounce del filtro).
     // eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -150,9 +146,7 @@ export default class DocumentsPage extends BasePage {
    */
   openFirstResult() {
     // eslint-disable-next-line cypress/no-force
-    cy.get(SEL.documents.resultRow, { timeout: 12000 })
-      .first()
-      .click({ force: true });
+    cy.get(SEL.documents.resultRow, { timeout: 12000 }).first().click({ force: true });
 
     // Verificar que se abrió el detalle buscando textos que siempre aparecen en él.
     cy.contains('Ver PDF', { timeout: 10000 }).should('be.visible');
@@ -188,8 +182,9 @@ export default class DocumentsPage extends BasePage {
         cy.get(SEL.documents.resultRow).should('not.exist');
       } else {
         // Fallback: buscar texto de estado vacío.
-        cy.contains(/sin resultado|no se encontr|0 documento/i, { timeout: 10000 })
-          .should('be.visible');
+        cy.contains(/sin resultado|no se encontr|0 documento/i, { timeout: 10000 }).should(
+          'be.visible',
+        );
       }
     });
     return this;
@@ -209,8 +204,7 @@ export default class DocumentsPage extends BasePage {
           cy.wrap(byTestId.first()).should('be.visible');
         } else {
           // El encabezado de columnas usa div[class*="tracking-widest"] > span
-          cy.contains(SEL.documents.resultTable, col, { matchCase: false })
-            .should('be.visible');
+          cy.contains(SEL.documents.resultTable, col, { matchCase: false }).should('be.visible');
         }
       });
     });

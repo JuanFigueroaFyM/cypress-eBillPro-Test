@@ -146,19 +146,17 @@ export const SEL = {
 
     // El encabezado de columnas es un <div> con clase "tracking-widest".
     // Los nombres de columna son <span> dentro de ese div.
-    resultTable: combine(
-      '[data-testid="doc-result-table"]',
-      'div[class*="tracking-widest"]',
-    ),
+    resultTable: combine('[data-testid="doc-result-table"]', 'div[class*="tracking-widest"]'),
     colHeader: (col) => `[data-testid="doc-col-${col}"]`,
 
     // Panel lateral / modal de detalle del documento (se monta dinámicamente).
     // Fallback: verificar por texto visible en body (Ver PDF, Información del Documento).
-    drawer: combine(
-      '[data-testid="doc-detail-drawer"]',
-      '[role="dialog"]',
+    drawer: combine('[data-testid="doc-detail-drawer"]', '[role="dialog"]'),
+    drawerTitle: combine(
+      '[data-testid="doc-detail-title"]',
+      '[role="dialog"] h2',
+      '[role="dialog"] h3',
     ),
-    drawerTitle: combine('[data-testid="doc-detail-title"]', '[role="dialog"] h2', '[role="dialog"] h3'),
     drawerPdfBtn: '[data-testid="doc-detail-pdf"]',
     drawerClose: combine(
       '[data-testid="doc-detail-close"]',
@@ -167,72 +165,60 @@ export const SEL = {
     ),
   },
 
-clients: {
-  listTable: combine(
-    '[data-testid="clients-table"]',
-    'div[class*="card"]',
-    'div[class*="rounded"]'
-  ),
+  clients: {
+    listTable: combine(
+      '[data-testid="clients-table"]',
+      'div[class*="card"]',
+      'div[class*="rounded"]',
+    ),
 
-  searchInput: combine(
-    '[data-testid="clients-search"]',
-    'input[placeholder*="identificaci"]',
-    'input[placeholder*="buscar"]',
-    'input[placeholder*="cliente"]',
-    'input[placeholder*="email"]'
-  ),
+    searchInput: combine(
+      '[data-testid="clients-search"]',
+      'input[placeholder*="identificaci"]',
+      'input[placeholder*="buscar"]',
+      'input[placeholder*="cliente"]',
+      'input[placeholder*="email"]',
+    ),
 
-  newBtn: combine(
-    '[data-testid="clients-new"]',
-    'button:contains("Nuevo Cliente")'
-  ),
+    newBtn: combine('[data-testid="clients-new"]', 'button:contains("Nuevo Cliente")'),
 
-  // 🔥 ESTE ES EL CAMBIO CLAVE
-  row: combine(
-    '[data-testid^="client-row-"]', // futuro
-    'div.group.cursor-pointer',     // REAL
-    'div[class*="cursor-pointer"][class*="grid"]'
-  ),
+    // 🔥 ESTE ES EL CAMBIO CLAVE
+    row: combine(
+      '[data-testid^="client-row-"]', // futuro
+      'div.group.cursor-pointer', // REAL
+      'div[class*="cursor-pointer"][class*="grid"]',
+    ),
 
-  // fallback inteligente (no depende de data-testid)
-  rowByNit: (nit) => `div.group:contains("${nit}")`,
+    // fallback inteligente (no depende de data-testid)
+    rowByNit: (nit) => `div.group:contains("${nit}")`,
 
-  totalCount: combine(
-    '[data-testid="clients-total-count"]',
-    'p:contains("clientes")'
-  ),
+    totalCount: combine('[data-testid="clients-total-count"]', 'p:contains("clientes")'),
 
-  emptyState: combine(
-    '[data-testid="clients-empty"]',
-    'p:contains("clientes")',
-    'div:contains("sin")',
-    'div:contains("No hay")'
-  ),
+    emptyState: combine(
+      '[data-testid="clients-empty"]',
+      'p:contains("clientes")',
+      'div:contains("sin")',
+      'div:contains("No hay")',
+    ),
 
-  detailModal: combine(
-    '[data-testid="client-detail-modal"]',
-    '[role="dialog"]'
-  ),
+    detailModal: combine('[data-testid="client-detail-modal"]', '[role="dialog"]'),
 
-  detailTitle: combine(
-    '[data-testid="client-detail-title"]',
-    'h1, h2'
-  ),
+    detailTitle: combine('[data-testid="client-detail-title"]', 'h1, h2'),
 
-  detailClose: combine(
-    '[data-testid="client-detail-close"]',
-    'button[aria-label*="close"]',
-    'button[aria-label*="cerrar"]'
-  ),
+    detailClose: combine(
+      '[data-testid="client-detail-close"]',
+      'button[aria-label*="close"]',
+      'button[aria-label*="cerrar"]',
+    ),
 
-  form: {
-    root: '[data-testid="client-form"]',
-    nit: '[data-testid="client-form-nit"]',
-    name: '[data-testid="client-form-name"]',
-    email: '[data-testid="client-form-email"]',
-    submit: '[data-testid="client-form-submit"]',
+    form: {
+      root: '[data-testid="client-form"]',
+      nit: '[data-testid="client-form-nit"]',
+      name: '[data-testid="client-form-name"]',
+      email: '[data-testid="client-form-email"]',
+      submit: '[data-testid="client-form-submit"]',
+    },
   },
-},
 
   // ─── Módulo Productos ─────────────────────────────────────────────────────
   products: {
