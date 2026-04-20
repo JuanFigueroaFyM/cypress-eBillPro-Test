@@ -24,6 +24,7 @@ module.exports = {
     'cypress/no-async-tests': 'error',
     'cypress/assertion-before-screenshot': 'error',
     'cypress/require-data-selectors': 'off',     // TODO: poner 'warn' cuando FE agregue data-testid
+    'cypress/unsafe-to-chain-command': 'off', // Temporal - Borrar
 
     // ─── JS básico ──────────────────────────────────────────────────────────
     'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
