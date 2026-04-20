@@ -76,13 +76,9 @@ module.exports = defineConfig({
     numTestsKeptInMemory: 25, // evita OOM en specs largos
 
     setupNodeEvents(on, config) {
-      require('cypress-mochawesome-reporter/plugin')(on, {
-        reportDir: 'cypress/reports',
-        overwrite: false,
-        html: true,
-        json: true,
-        saveAllAttempts: false,
-      });
+      if (!process.env.CI) {
+        require('cypress-mochawesome-reporter/plugin')(on);
+      }
 
       // Plugin de tags @smoke / @regression / @critical.
       try {
