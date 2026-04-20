@@ -27,9 +27,7 @@ module.exports = defineConfig({
   projectId: 'jt9552',
 
   // ─── Reporter ──────────────────────────────────────────────────────────
-  reporter: process.env.CI
-    ? 'spec'
-    : 'cypress-mochawesome-reporter',
+  reporter: process.env.CI ? 'spec' : 'cypress-mochawesome-reporter',
   reporterOptions: {
     reportDir: 'cypress/reports',
     reportFilename: '[datetime]-[status]-report',
