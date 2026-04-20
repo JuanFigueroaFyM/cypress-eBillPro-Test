@@ -1,4 +1,5 @@
 {
+  "_comment": "Datos de BÚSQUEDA para el módulo de clientes. Valores 'valido' deben existir en el ambiente o ser sembrados via cy.apiCrearCliente().",
   "busqueda": {
     "nombre_valido": "AIDLIFE",
     "nit_valido": "901754460",

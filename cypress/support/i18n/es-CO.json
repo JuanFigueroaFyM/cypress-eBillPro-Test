@@ -1,0 +1,47 @@
+{
+  "_locale": "es-CO",
+  "_country": "Colombia",
+
+  "login.error.invalidCredentials": "Credenciales inválidas",
+  "login.error.required": "Campo obligatorio",
+  "login.btn.submit": "Iniciar sesión",
+  "login.label.username": "Usuario",
+  "login.label.password": "Contraseña",
+
+  "nav.dashboard": "Dashboard",
+  "nav.documents": "Documentos",
+  "nav.clients": "Clientes",
+  "nav.products": "Productos y Servicios",
+  "nav.company": "Mi Empresa",
+  "nav.logout": "Cerrar Sesión",
+
+  "doc.search.title": "Buscar documento específico",
+  "doc.search.prefix": "Prefijo",
+  "doc.search.number": "Número",
+  "doc.search.submit": "Buscar",
+  "doc.search.placeholderClient": "Buscar por cliente",
+  "doc.filters.toggle": "Filtros",
+  "doc.results.empty": "Sin resultados",
+  "doc.results.countSingular": "documento encontrado",
+  "doc.results.countPlural": "documentos encontrados",
+  "doc.col.document": "Documento",
+  "doc.col.client": "Cliente",
+  "doc.col.amount": "Monto",
+  "doc.col.date": "Fecha",
+  "doc.col.status": "Estado",
+  "doc.col.actions": "Acciones",
+  "doc.detail.title": "Información del Documento",
+  "doc.detail.pdf": "Ver PDF",
+
+  "client.list.newBtn": "Nuevo Cliente",
+  "client.list.empty": "No hay clientes",
+  "client.detail.title": "Detalles del Cliente",
+  "client.col.client": "Cliente",
+  "client.col.contact": "Contacto",
+  "client.col.actions": "Acciones",
+
+  "format.date": "DD/MM/YYYY",
+  "format.decimal": ",",
+  "format.thousand": ".",
+  "format.currency": "COP"
+}

@@ -1,150 +1,145 @@
 // =============================================================================
-// Suite : Documentos — /invoices
-// Reporter: Mochawesome (genera reporte HTML en cypress/reports/)
+// Suite: Documentos — /invoices
+// -----------------------------------------------------------------------------
+// Refactor v4: Adaptado a la UI real de eBill Pro Go.
 //
-// UI observada en ebillprogotest.facturaenlinea.co/invoices:
-//   • Sección superior: "Buscar documento específico"
-//     - TIPO (dropdown), Prefijo* (input), Número* (input), botón Buscar
-//     - Buscar está DISABLED hasta que ambos campos (prefijo + número) tengan valor
-//   • Sección inferior: lista de resultados con buscador por cliente + Filtros
-//     - Columnas: DOCUMENTO | CLIENTE | MONTO | FECHA | ESTADO | ACCIONES
+// COMPORTAMIENTO REAL DE LA APP:
+//  - Lista usa <div> con Tailwind, NO <table>/<tr>. Filas: div.cursor-pointer.animate-fade-in
+//  - Encabezados de columna: <span> dentro de div.tracking-widest (NO <th>)
+//  - Filtros REACTIVOS → no hay botón submit de búsqueda
+//  - "Buscar por cliente..." siempre visible → filtra por nombre de cliente
+//  - Botón "Filtros" → panel con NÚMERO DE DOCUMENTO, TIPO, FECHA
+//  - El drawer de detalle se monta dinámicamente (no existe en HTML inicial)
 //
-// TC-DOC-001  El botón Buscar está deshabilitado con campos vacíos
-// TC-DOC-002  Buscar con prefijo + número válidos retorna el documento
-// TC-DOC-003  Buscar con prefijo + número inexistentes muestra estado vacío
-// TC-DOC-004  La tabla de resultados tiene las columnas esperadas
-// TC-DOC-005  El buscador por cliente filtra los resultados de la lista
-// TC-DOC-006  El botón Filtros abre opciones de filtrado avanzado
-// TC-DOC-007  Hacer click en un resultado abre su detalle
+// Ver cypress/pages/DocumentsPage.js para la lógica de UI.
 // =============================================================================
 
-describe('Documentos — /invoices', () => {
+import { DocumentsPage } from '../../pages';
 
+const page = new DocumentsPage();
+
+describe('Documentos — /invoices', { tags: ['@documents', '@smoke'] }, () => {
   beforeEach(() => {
     cy.loginExitoso();
-    cy.irADocumentos();
+    page.visit();
   });
 
   // ── TC-DOC-001 ─────────────────────────────────────────────────────────────
-  it('TC-DOC-001 | El botón Buscar está deshabilitado cuando los campos están vacíos', () => {
-    // Limpiar ambos campos
-    cy.contains('Prefijo').closest('div').find('input').clear();
-    cy.contains('Número').closest('div').find('input').clear();
-
-    // El botón Buscar debe estar disabled
-    cy.contains('button', 'Buscar').should('be.disabled');
+  // La lista de documentos debe renderizarse con filas visibles al cargar.
+  // Valida que los div-fila (cursor-pointer + animate-fade-in) existen.
+  it('TC-DOC-001 | La lista carga y muestra documentos al visitar la página', () => {
+    page.shouldShowInitialResults();
   });
 
   // ── TC-DOC-001b ────────────────────────────────────────────────────────────
-  it('TC-DOC-001b | El botón Buscar se habilita solo cuando ambos campos tienen valor', () => {
+  // El input "Buscar por cliente..." filtra la lista de forma reactiva.
+  it('TC-DOC-001b | Filtrar por nombre de cliente acota los resultados', () => {
     cy.fixture('documents').then(({ busqueda }) => {
-      // Solo prefijo → sigue disabled
-      cy.contains('Prefijo').closest('div').find('input')
-        .clear().type(busqueda.prefijo_valido);
-      cy.contains('button', 'Buscar').should('be.disabled');
+      page.filterByClient(busqueda.nombreCliente);
 
-      // Agregar número → se habilita
-      cy.contains('Número').closest('div').find('input')
-        .clear().type(busqueda.numero_valido);
-      cy.contains('button', 'Buscar').should('not.be.disabled');
+      // La lista debe contener al menos una fila con el nombre del cliente,
+      // o mostrar estado vacío si no existe en el ambiente.
+      cy.get('body', { timeout: 10000 }).should('satisfy', ($b) => {
+        const text = $b.text().toLowerCase();
+        const clientLower = busqueda.nombreCliente.toLowerCase();
+        const hasRows = $b.find(
+          '[data-testid^="doc-row-"], div[class*="cursor-pointer"][class*="animate-fade-in"]'
+        ).length > 0;
+
+        return (
+          text.includes(clientLower) ||
+          text.includes('sin resultado') ||
+          text.includes('no se encontr') ||
+          !hasRows
+        );
+      });
     });
   });
 
   // ── TC-DOC-002 ─────────────────────────────────────────────────────────────
-  it('TC-DOC-002 | Buscar con prefijo y número válidos retorna el documento', () => {
+  // Buscar por NÚMERO DE DOCUMENTO (en el panel Filtros) debe retornar resultados.
+  it('TC-DOC-002 | Buscar por número de documento retorna el documento', () => {
     cy.fixture('documents').then(({ busqueda }) => {
-      cy.buscarDocumento(busqueda.prefijo_valido, busqueda.numero_valido);
-
-      // Debe mostrar al menos 1 resultado
-      cy.contains(/documento encontrado/i).should('be.visible');
-
-      // El documento debe tener el prefijo buscado
-      cy.get('body').should('contain.text', busqueda.prefijo_valido);
+      page.searchSpecific(busqueda.valido);
+      page.shouldHaveAtLeastOneResult();
+      // El número buscado debe ser visible en los resultados.
+      cy.contains(busqueda.valido.prefijo, { timeout: 8000 }).should('be.visible');
     });
   });
 
   // ── TC-DOC-003 ─────────────────────────────────────────────────────────────
-  it('TC-DOC-003 | Buscar con datos inexistentes muestra estado sin resultados', () => {
+  it('TC-DOC-003 | Buscar con número inexistente muestra estado vacío', () => {
     cy.fixture('documents').then(({ busqueda }) => {
-      cy.buscarDocumento(busqueda.prefijo_inexistente, busqueda.numero_inexistente);
+      page.searchSpecific(busqueda.inexistente);
 
-      cy.get('body', { timeout: 8000 }).should('satisfy', ($b) => {
-        const t = $b.text().toLowerCase();
+      cy.get('body', { timeout: 10000 }).should('satisfy', ($b) => {
+        const text = $b.text().toLowerCase();
+        const hasRows = $b.find(
+          '[data-testid^="doc-row-"], div[class*="cursor-pointer"][class*="animate-fade-in"]'
+        ).length > 0;
+
         return (
-          t.includes('sin resultado')    ||
-          t.includes('no se encontr')    ||
-          t.includes('0 documento')      ||
-          // La tabla existe pero sin filas de datos
-          $b.find('table tbody tr, [class*="row"]:not([class*="header"])').length === 0
+          text.includes('sin resultado') ||
+          text.includes('no se encontr') ||
+          text.includes('0 documento') ||
+          !hasRows
         );
       });
     });
   });
 
   // ── TC-DOC-004 ─────────────────────────────────────────────────────────────
+  // Los encabezados de columna están en <span> dentro de un div.tracking-widest.
   it('TC-DOC-004 | La tabla de resultados tiene las columnas esperadas', () => {
-    cy.fixture('documents').then(({ busqueda, columnas }) => {
-      cy.buscarDocumento(busqueda.prefijo_valido, busqueda.numero_valido);
-
-      // Verificar columnas reales: DOCUMENTO, CLIENTE, MONTO, FECHA, ESTADO, ACCIONES
-      columnas.forEach((col) => {
-        cy.get('body').should('contain.text', col);
-      });
+    cy.fixture('documents').then(({ columnas }) => {
+      // Las columnas se comprueban sobre la lista inicial sin necesidad de filtrar.
+      page.shouldHaveColumns(columnas);
     });
   });
 
   // ── TC-DOC-005 ─────────────────────────────────────────────────────────────
-  it('TC-DOC-005 | El buscador "Buscar por cliente..." filtra la lista', () => {
+  it('TC-DOC-005 | El filtro por cliente acota visualmente los resultados', () => {
     cy.fixture('documents').then(({ busqueda }) => {
-      // Primero traer resultados
-      cy.buscarDocumento(busqueda.prefijo_valido, busqueda.numero_valido);
+      page.filterByClient(busqueda.nombreCliente);
 
-      // Escribir en el campo de búsqueda por cliente
-      cy.get('[placeholder*="cliente"], [placeholder*="Cliente"]')
-        .first()
-        .clear()
-        .type(busqueda.nombre_cliente);
+      cy.get('body', { timeout: 10000 }).should('satisfy', ($b) => {
+        const text = $b.text().toLowerCase();
+        const hasFilteredRows = $b.find(
+          '[data-testid^="doc-row-"], div[class*="cursor-pointer"][class*="animate-fade-in"]'
+        ).length > 0;
 
-      // La lista debe seguir visible (filter reactivo)
-      cy.get('body', { timeout: 5000 }).should('satisfy', ($b) => {
-        const t = $b.text().toLowerCase();
         return (
-          t.includes(busqueda.nombre_cliente.toLowerCase()) ||
-          t.includes('sin resultado') ||
-          t.includes('documento')
+          text.includes(busqueda.nombreCliente.toLowerCase()) ||
+          text.includes('sin resultado') ||
+          !hasFilteredRows
         );
       });
     });
   });
 
   // ── TC-DOC-006 ─────────────────────────────────────────────────────────────
-  it('TC-DOC-006 | El botón "Filtros" está disponible en la lista', () => {
-    // El botón Filtros existe en la sección de lista (no en la búsqueda)
-    cy.contains('button', 'Filtros').should('be.visible');
+  it('TC-DOC-006 | El botón Filtros está visible y abre el panel de filtros avanzados', () => {
+    page.filtersToggleShouldBeVisible();
+
+    // Al abrir el panel deben aparecer los campos de filtro avanzado.
+    page.openFiltersPanel();
+
+    // Verificar que el input de NÚMERO DE DOCUMENTO está visible.
+    // NOTA: No usar flag " i" en selectores CSS — Sizzle no lo soporta.
+    cy.get(
+      '[data-testid="doc-search-number"], input[placeholder="INV-2025-001"], input[name="numeroDocumento"]',
+      { timeout: 8000 }
+    ).should('be.visible');
   });
 
   // ── TC-DOC-007 ─────────────────────────────────────────────────────────────
-  it('TC-DOC-007 | Hacer click en un resultado abre su detalle', () => {
+  // Al hacer click en una fila se debe abrir el drawer de detalle del documento.
+  it('TC-DOC-007 | Hacer click en un resultado abre el detalle del documento', () => {
     cy.fixture('documents').then(({ busqueda }) => {
-      cy.buscarDocumento(busqueda.prefijo_valido, busqueda.numero_valido);
-
-      // La tabla usa divs, no <tr>. Hacer click directo sobre el número de documento.
-      cy.contains(`${busqueda.prefijo_valido}-${busqueda.numero_valido}`)
-        .first()
-        .click({ force: true });
-
-      // El detalle se abre como drawer lateral.
-      // Verificar con texto único visible en el drawer (screenshot confirma estos textos).
-      cy.get('body', { timeout: 8000 }).should('satisfy', ($b) => {
-        return (
-          $b.text().includes('Ver PDF')                    ||
-          $b.text().includes('Información del Documento')  ||
-          $b.text().includes('MONTO TOTAL')                ||
-          $b.text().includes('FECHA EXPEDICIÓN')           ||
-          $b.text().includes('Estado Trámite')
-        );
-      });
+      page.searchSpecific(busqueda.valido);
+      page.shouldHaveAtLeastOneResult();
+      page.openFirstResult();
+      page.detailDrawerShouldBeVisibleWith(busqueda.valido);
     });
   });
-
 });

@@ -1,14 +1,15 @@
 {
+  "_comment": "Los perfiles reales se resuelven en runtime desde cypress.env.json o GitHub Secrets. Este archivo solo contiene alias y datos NO sensibles.",
   "valid": {
-    "username": "starkeytest",
-    "password": "soporte@123"
+    "envKey": "valid",
+    "role": "admin"
   },
   "invalid_user": {
-    "username": "usuario_que_no_existe",
-    "password": "soporte@123"
+    "username": "usuario_que_no_existe_zzzz999",
+    "password": "PasswordFalsoInvalido123!"
   },
   "invalid_password": {
-    "username": "starkeytest",
-    "password": "contraseña_incorrecta"
+    "envKey": "valid",
+    "password": "PasswordIncorrecto_NoCoincide_9999"
   }
 }

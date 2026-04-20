@@ -1,11 +1,18 @@
 {
+  "_comment": "Datos de BÚSQUEDA — los valores 'valido' deben existir en el ambiente de prueba.",
   "busqueda": {
-    "prefijo_valido": "SETT",
-    "numero_valido": "3456",
-    "prefijo_inexistente": "ZZZZ",
-    "numero_inexistente": "99999",
-    "nombre_cliente": "consumidor"
+    "valido": {
+      "prefijo": "SETT",
+      "numero": "473337",
+      "numeroDocumento": "SETT-473337"
+    },
+    "inexistente": {
+      "prefijo": "ZZZZ",
+      "numero": "99999",
+      "numeroDocumento": "ZZZZ-99999"
+    },
+    "nombreCliente": "REGIONAL DE ASEGURAMIENTO"
   },
-  "columnas": ["Documento", "Cliente", "Monto", "Fecha", "Estado", "Acciones"],
-  "tipos_documento": ["Factura", "Nota Crédito", "Nota Débito"]
+  "columnas": ["Documento", "Cliente", "Monto", "Fecha", "Estado"],
+  "tiposDocumento": ["Todos los tipos", "Factura", "Nota Crédito", "Nota Débito"]
 }

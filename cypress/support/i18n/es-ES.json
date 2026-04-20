@@ -1,0 +1,47 @@
+{
+  "_locale": "es-ES",
+  "_country": "España",
+
+  "login.error.invalidCredentials": "Credenciales no válidas",
+  "login.error.required": "Campo obligatorio",
+  "login.btn.submit": "Iniciar sesión",
+  "login.label.username": "Usuario",
+  "login.label.password": "Contraseña",
+
+  "nav.dashboard": "Panel",
+  "nav.documents": "Facturas",
+  "nav.clients": "Clientes",
+  "nav.products": "Productos y Servicios",
+  "nav.company": "Mi empresa",
+  "nav.logout": "Cerrar sesión",
+
+  "doc.search.title": "Buscar factura",
+  "doc.search.prefix": "Serie",
+  "doc.search.number": "Número",
+  "doc.search.submit": "Buscar",
+  "doc.search.placeholderClient": "Buscar por cliente",
+  "doc.filters.toggle": "Filtros",
+  "doc.results.empty": "Sin resultados",
+  "doc.results.countSingular": "factura encontrada",
+  "doc.results.countPlural": "facturas encontradas",
+  "doc.col.document": "Factura",
+  "doc.col.client": "Cliente",
+  "doc.col.amount": "Importe",
+  "doc.col.date": "Fecha",
+  "doc.col.status": "Estado",
+  "doc.col.actions": "Acciones",
+  "doc.detail.title": "Información de la factura",
+  "doc.detail.pdf": "Ver PDF",
+
+  "client.list.newBtn": "Nuevo cliente",
+  "client.list.empty": "No hay clientes",
+  "client.detail.title": "Detalles del cliente",
+  "client.col.client": "Cliente",
+  "client.col.contact": "Contacto",
+  "client.col.actions": "Acciones",
+
+  "format.date": "DD/MM/YYYY",
+  "format.decimal": ",",
+  "format.thousand": ".",
+  "format.currency": "EUR"
+}

@@ -1,46 +1,151 @@
-name: Pruebas E2E — eBill Pro Go   # ← solo esto cambia
+name: Pruebas E2E — eBill Pro Go
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
+  push:
+    branches: [main]
+  schedule:
+    # Regression completa todas las noches 06:00 UTC = 01:00 COT
+    - cron: '0 6 * * *'
   workflow_dispatch:
 
+env:
+  # Todas las jobs corren contra el ambiente de test por defecto.
+  CYPRESS_ENV: test
+
 jobs:
-  cypress-run:
-    name: Cypress E2E
+  # ───────────────────────────────────────────────────────────────────────────
+  # 1. Lint + formato — falla rápido antes de gastar runners en tests.
+  # ───────────────────────────────────────────────────────────────────────────
+  lint:
+    name: Lint & Format
     runs-on: ubuntu-latest
-
+    timeout-minutes: 5
     steps:
-      - name: Checkout repositorio
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run verify
 
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v4
+  # ───────────────────────────────────────────────────────────────────────────
+  # 2. Smoke — rápido, en PR. Solo tests con tag @smoke.
+  # ───────────────────────────────────────────────────────────────────────────
+  smoke:
+    name: Cypress Smoke (PR)
+    needs: lint
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [1, 2]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
-      - name: Instalar dependencias
-        run: npm ci
+      - name: Cache de binario Cypress
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
-      - name: Correr pruebas y grabar en Cypress Cloud
+      - name: Cypress run (smoke)
         uses: cypress-io/github-action@v6
         with:
           record: true
+          parallel: true
+          group: 'smoke'
+          tag: 'pr'
           browser: chrome
-          # Sin "spec:" → corre todo lo que esté en cypress/e2e/**/*.cy.js
+          env: grepTags=@smoke,grepFilterSpecs=true
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
           CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Subir reporte HTML como artefacto
+      - name: Subir reporte HTML
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: reporte-cypress-${{ github.run_number }}
+          name: reporte-smoke-${{ github.run_number }}-${{ matrix.containers }}
+          path: cypress/reports/
+          retention-days: 14
+
+      - name: Subir videos/screenshots de fallos
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: debug-smoke-${{ github.run_number }}-${{ matrix.containers }}
+          path: |
+            cypress/screenshots/
+            cypress/videos/
+          retention-days: 7
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # 3. Regression — completa, nightly, on push a main o on-demand.
+  # ───────────────────────────────────────────────────────────────────────────
+  regression:
+    name: Cypress Regression
+    needs: lint
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Cache de binario Cypress
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Cypress run (regression)
+        uses: cypress-io/github-action@v6
+        with:
+          record: true
+          parallel: true
+          group: 'regression'
+          tag: ${{ github.event_name }}
+          browser: chrome
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
+          CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Subir reporte HTML
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reporte-regression-${{ github.run_number }}-${{ matrix.containers }}
           path: cypress/reports/
           retention-days: 30
+
+      - name: Subir videos/screenshots de fallos
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: debug-regression-${{ github.run_number }}-${{ matrix.containers }}
+          path: |
+            cypress/screenshots/
+            cypress/videos/
+          retention-days: 14
