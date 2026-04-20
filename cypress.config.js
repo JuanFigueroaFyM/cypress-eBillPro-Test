@@ -98,6 +98,19 @@ module.exports = defineConfig({
         }
       });
 
+            // ─── Inyección de usuarios desde CI (CYPRESS_USERS) ────────────────
+      if (process.env.CYPRESS_USERS) {
+        try {
+          const usersFromCI = JSON.parse(process.env.CYPRESS_USERS);
+          config.env.users = usersFromCI;
+          console.log('[cypress.config] Users cargados desde CYPRESS_USERS');
+        } catch (err) {
+          throw new Error(
+            '[cypress.config] Error parseando CYPRESS_USERS. Debe ser JSON válido.',
+          );
+        }
+      }
+
       return config;
     },
 

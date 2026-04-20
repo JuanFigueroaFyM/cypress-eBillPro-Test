@@ -13,6 +13,7 @@ on:
 env:
   # Todas las jobs corren contra el ambiente de test por defecto.
   CYPRESS_ENV: test
+  CYPRESS_USERS: ${{ secrets.CYPRESS_USERS }}
 
 jobs:
   # ───────────────────────────────────────────────────────────────────────────
