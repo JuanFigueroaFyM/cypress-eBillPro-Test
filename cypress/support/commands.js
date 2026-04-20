@@ -133,3 +133,36 @@ Cypress.Commands.add('buscarDocumento', (prefijo, numero) => {
     $b.text().toLowerCase().includes('no se encontr')
   );
 });
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CLIENTES
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * cy.irAClientes()
+ * Navega a /clients y verifica que la sesión sigue activa y la lista carga.
+ */
+Cypress.Commands.add('irAClientes', () => {
+  cy.visit('/clients');
+  cy.url({ timeout: 12000 }).should('not.include', '/auth');
+  cy.get('body').should('be.visible');
+  // Esperar a que cargue la lista (aparece el contador "X clientes")
+  cy.get('body', { timeout: 12000 }).should('satisfy', ($b) =>
+    $b.text().toLowerCase().includes('cliente')
+  );
+});
+
+/**
+ * cy.filtrarClientes(texto)
+ * Escribe en el campo de búsqueda reactivo (sin botón).
+ * Placeholder real: "Buscar clientes por identificación o email..."
+ */
+Cypress.Commands.add('filtrarClientes', (texto) => {
+  cy.get('[placeholder*="identificación"], [placeholder*="email"], [placeholder*="Buscar clientes"]')
+    .first()
+    .clear()
+    .type(texto, { force: true });
+  // Espera el debounce del filtro reactivo
+  cy.wait(800);
+});

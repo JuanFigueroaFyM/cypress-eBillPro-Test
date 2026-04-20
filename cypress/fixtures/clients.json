@@ -1,0 +1,9 @@
+{
+  "busqueda": {
+    "nombre_valido": "AIDLIFE",
+    "nit_valido": "901754460",
+    "email_valido": "ganaderos@fymtech.com",
+    "filtro_inexistente": "ZZZZZNOEXISTE99999"
+  },
+  "columnas": ["Cliente", "Contacto", "Acciones"]
+}

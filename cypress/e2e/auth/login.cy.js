@@ -37,7 +37,6 @@ describe('Autenticación — /auth', () => {
         return (
           text.includes('Dashboard')    ||
           text.includes('Documentos')   ||
-          text.includes('CINE COLOMBIA')||
           text.includes('Facturas')
         );
       });
@@ -140,8 +139,7 @@ describe('Autenticación — /auth', () => {
       cy.get('body').should('satisfy', ($body) => {
         return (
           $body.text().includes('Dashboard')    ||
-          $body.text().includes('Documentos')   ||
-          $body.text().includes('CINE COLOMBIA')
+          $body.text().includes('Documentos')  
         );
       });
     });

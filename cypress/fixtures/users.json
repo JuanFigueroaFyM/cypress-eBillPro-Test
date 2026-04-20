@@ -1,14 +1,14 @@
 {
   "valid": {
-    "username": "cinecolombiatest",
-    "password": "soporte@1"
+    "username": "starkeytest",
+    "password": "soporte@123"
   },
   "invalid_user": {
     "username": "usuario_que_no_existe",
-    "password": "soporte@1"
+    "password": "soporte@123"
   },
   "invalid_password": {
-    "username": "cinecolombiatest",
+    "username": "starkeytest",
     "password": "contraseña_incorrecta"
   }
 }

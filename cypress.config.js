@@ -44,8 +44,8 @@ module.exports = defineConfig({
     },
 
     env: {
-      USERNAME: 'cinecolombiatest',
-      PASSWORD: 'soporte@1',
+      USERNAME: 'starkeytest',
+      PASSWORD: 'soporte@123',
     },
   },
 });
