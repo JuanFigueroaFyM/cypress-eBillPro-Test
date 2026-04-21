@@ -1,0 +1,34 @@
+{
+  "_comment": "Datos de prueba para el flujo Nuevo Documento (4 pasos). Ambiente test ebillprogotest.",
+  "cliente": {
+    "nombre": "AIDLIFE CENTER SAS",
+    "nit": "901754460",
+    "email": "ganaderos@fymtech.com"
+  },
+  "producto": {
+    "nombre": "producto de prueba",
+    "codigo": "1234"
+  },
+  "referencia": {
+    "_comment": "Factura existente en el ambiente test para usar como referencia en Nota CR/DB.",
+    "facturaNumero": "SETT-473337",
+    "cufe": "1ef2ebb2d8cdcbc8f039564dabdec9906445e65f9903981008ef92180d2264ed8c8a2c9cbf3c090064cf0ec79eba2327"
+  },
+  "tiposDocumento": [
+    { "label": "Factura", "tag": "factura", "tieneReferencia": false },
+    { "label": "Nota Credito", "tag": "nota-credito", "tieneReferencia": true },
+    { "label": "Nota Debito", "tag": "nota-debito", "tieneReferencia": true },
+    { "label": "Doc. Soporte Adquisiciones no Obligados", "tag": "dsno", "tieneReferencia": false },
+    {
+      "label": "Nota de Doc. Soporte Adquisiciones no Obligados",
+      "tag": "nota-dsno",
+      "tieneReferencia": false
+    }
+  ],
+  "defaults": {
+    "jurisdiccion": "Colombia (DIAN)",
+    "moneda": "PESOS COLOMBIAN",
+    "formaPago": "Contado",
+    "medioPago": "Efectivo"
+  }
+}

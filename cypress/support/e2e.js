@@ -9,6 +9,11 @@
 
 import 'cypress-mochawesome-reporter/register';
 
+// Filtrado por título y tags (@smoke, @regression, etc.) con @cypress/grep.
+// IMPORTANTE: debe importarse aquí (support file) para que filtre tests dentro
+// del browser. El plugin de Node en cypress.config.js solo filtra a nivel de spec.
+import '@cypress/grep';
+
 // Carga todos los custom commands (auth, navigation, api, logging).
 import './commands';
 

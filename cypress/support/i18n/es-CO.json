@@ -43,5 +43,43 @@
   "format.date": "DD/MM/YYYY",
   "format.decimal": ",",
   "format.thousand": ".",
-  "format.currency": "COP"
+  "format.currency": "COP",
+
+  "nd.btn.next": "Siguiente",
+  "nd.btn.prev": "Anterior",
+  "nd.btn.generate": "Generar Documento",
+
+  "nd.step1.label": "Inicio",
+  "nd.step2.label": "Cliente",
+  "nd.step3.label": "Productos",
+  "nd.step4.label": "Resumen",
+
+  "nd.step1.title": "Configuración Inicial",
+  "nd.step2.title": "Datos del Cliente",
+  "nd.step3.title": "Detalle de Productos/Servicios",
+  "nd.step4.title": "Resumen de la Factura",
+
+  "nd.field.tipoComprobante": "Tipo de Comprobante",
+  "nd.field.jurisdiccion": "Jurisdicción",
+  "nd.field.fechaExpedicion": "Fecha de Expedición",
+  "nd.field.fechaVencimiento": "Fecha de Vencimiento",
+  "nd.field.moneda": "Moneda",
+  "nd.field.formaPago": "Forma de Pago",
+  "nd.field.medioPago": "Medio de Pago",
+  "nd.field.vendedor": "Vendedor",
+  "nd.field.fechaPago": "Fecha de Pago",
+  "nd.field.autogenerar": "Autogenerar",
+  "nd.field.periodo": "Periodo",
+  "nd.field.numeracion": "Numeración",
+
+  "nd.tipos.factura": "Factura",
+  "nd.tipos.notaCredito": "Nota Crédito",
+  "nd.tipos.notaDebito": "Nota Débito",
+  "nd.tipos.dsno": "DSNO",
+  "nd.tipos.notaDsno": "Nota DSNO",
+
+  "nd.resumen.tipoComprobante": "TIPO DE COMPROBANTE",
+  "nd.resumen.fechaExpedicion": "FECHA EXPEDICIÓN",
+  "nd.resumen.cliente": "Cliente",
+  "nd.resumen.productos": "Productos"
 }

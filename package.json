@@ -10,6 +10,7 @@
     "cy:run:auth": "cypress run --spec 'cypress/e2e/auth/**/*.cy.js'",
     "cy:run:docs": "cypress run --spec 'cypress/e2e/documents/**/*.cy.js'",
     "cy:run:clients": "cypress run --spec 'cypress/e2e/clients/**/*.cy.js'",
+    "cy:run:nuevo-doc": "cypress run --spec 'cypress/e2e/documents/nuevo-documento.cy.js'",
     "cy:run:smoke": "cypress run --env grepTags=@smoke",
     "cy:run:regression": "cypress run --env grepTags=@regression",
     "cy:run:critical": "cypress run --env grepTags=@critical",

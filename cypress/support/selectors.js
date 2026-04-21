@@ -236,6 +236,181 @@ export const SEL = {
     },
   },
 
+  // ─── Nuevo Documento — Wizard 4 pasos (/invoices/new) ───────────────────
+  //
+  // ESTRATEGIA DE SELECCIÓN:
+  //   La UI actual no expone data-testid en este formulario, por lo que los
+  //   fallbacks se basan en atributos HTML estables (placeholder, type, role).
+  //   El Page Object NuevoDocumentoPage.js usa cy.contains() para navegar por
+  //   etiqueta cuando los selectores no son suficientemente específicos.
+  //   Cuando el frontend agregue [data-testid="nd-*"], el primario tendrá
+  //   prioridad automática por orden CSS.
+  //
+  nuevoDocumento: {
+    // ── Navegación del wizard ─────────────────────────────────────────────
+    // Los botones se manejan con cy.contains() en el Page Object.
+    // Se dejan aquí como referencia para cuando se agreguen data-testid.
+    nextBtn: '[data-testid="nd-btn-next"]',
+    prevBtn: '[data-testid="nd-btn-prev"]',
+    generateBtn: '[data-testid="nd-btn-generate"]',
+
+    // Indicadores de paso (breadcrumb superior: Inicio › Cliente › Productos › Resumen)
+    stepIndicator: (n) => `[data-testid="nd-step-${n}"]`,
+
+    // ── Paso 1 › Tipo de Documento ────────────────────────────────────────
+    // DOM real: <button role="combobox" id="docType" aria-autocomplete="none">
+    // Es un Radix UI Select. Al hacer click abre [role="listbox"] con [role="option"].
+    // Se diferencia del botón de cliente/producto porque tiene aria-autocomplete="none"
+    // y el ID estable "docType".
+    tipoComprobante: combine(
+      '[data-testid="nd-tipo-comprobante"]',
+      '#docType',
+      'button[role="combobox"][aria-autocomplete="none"]',
+    ),
+
+    // Combobox "Jurisdicción" — mismo patrón Radix Select
+    jurisdiccion: combine(
+      '[data-testid="nd-jurisdiccion"]',
+      'button[role="combobox"][aria-autocomplete="none"]:not(#docType)',
+      'select[name="jurisdiccion"]',
+    ),
+
+    // Input de búsqueda dentro del dialog (cliente o producto)
+    // Se usa dentro de cy.get('[role="dialog"]').within(...)
+    dialogSearchInput: combine(
+      '[data-testid="nd-dialog-search"]',
+      'input[type="search"]',
+      'input[type="text"]',
+      'input',
+    ),
+
+    // ── Paso 1 › Fechas del Documento ────────────────────────────────────
+    // Fecha de Expedición suele ser read-only (auto-filled con hoy).
+    fechaExpedicion: combine(
+      '[data-testid="nd-fecha-expedicion"]',
+      'input[name="fechaExpedicion"]',
+      'input[name="fecha_expedicion"]',
+    ),
+
+    // Fecha de Vencimiento — editable, tipo date.
+    fechaVencimiento: combine(
+      '[data-testid="nd-fecha-vencimiento"]',
+      'input[name="fechaVencimiento"]',
+      'input[name="fecha_vencimiento"]',
+      'input[type="date"][name*="vencimiento"]',
+    ),
+
+    // ── Paso 1 › Datos de Venta ───────────────────────────────────────────
+    moneda: combine(
+      '[data-testid="nd-moneda"]',
+      'select[name="moneda"]',
+      'select[name="currency"]',
+    ),
+
+    formaPago: combine(
+      '[data-testid="nd-forma-pago"]',
+      'select[name="formaPago"]',
+      'select[name="forma_pago"]',
+      'select[name="paymentForm"]',
+    ),
+
+    medioPago: combine(
+      '[data-testid="nd-medio-pago"]',
+      'select[name="medioPago"]',
+      'select[name="medio_pago"]',
+      'select[name="paymentMethod"]',
+    ),
+
+    vendedor: combine(
+      '[data-testid="nd-vendedor"]',
+      'input[name="vendedor"]',
+      'input[placeholder="Opcional"]',
+      'input[name="seller"]',
+    ),
+
+    fechaPago: combine(
+      '[data-testid="nd-fecha-pago"]',
+      'input[name="fechaPago"]',
+      'input[name="fecha_pago"]',
+      'input[name="paymentDate"]',
+    ),
+
+    // ── Paso 1 › Numeración ───────────────────────────────────────────────
+    // Toggle "Autogenerar" — puede ser <button role="switch"> o <input type="checkbox">
+    numeracionToggle: combine(
+      '[data-testid="nd-numeracion-auto"]',
+      'button[role="switch"]',
+      'input[type="checkbox"][name*="auto"]',
+      'input[type="checkbox"][name*="numeracion"]',
+    ),
+
+    // Selector de resolución (visible cuando Autogenerar está OFF)
+    resolucionSelect: combine(
+      '[data-testid="nd-resolucion"]',
+      'select[name="resolucion"]',
+      'select[name="resolution"]',
+      'button[role="combobox"][data-placeholder=""]',
+    ),
+
+    // Campo de número manual (visible cuando Autogenerar está OFF)
+    numeroManual: combine(
+      '[data-testid="nd-numero-manual"]',
+      'input[name="numero"]',
+      'input[name="number"]',
+    ),
+
+    // ── Paso 1 › Referencia (solo Nota Crédito / Nota Débito) ─────────────
+    // Input para el número de la factura original
+    refFacturaInput: combine(
+      '[data-testid="nd-ref-factura"]',
+      'input[name="facturaReferencia"]',
+      'input[name="refFactura"]',
+      'input[name="invoiceReference"]',
+    ),
+
+    // Input para el CUFE de la factura original
+    refCufeInput: combine(
+      '[data-testid="nd-ref-cufe"]',
+      'input[name="cufe"]',
+      'input[name="CUFE"]',
+      'input[name="cufeRef"]',
+    ),
+
+    // Selector o input de periodo (alternativa sin referencia)
+    refPeriodo: combine(
+      '[data-testid="nd-ref-periodo"]',
+      'select[name="periodo"]',
+      'input[name="periodo"]',
+      'select[name="period"]',
+    ),
+
+    // ── Paso 2 › Cliente ──────────────────────────────────────────────────
+    // DOM real: <button role="combobox" aria-haspopup="dialog">
+    //   <span class="text-muted-foreground">Seleccione un cliente</span>
+    // Al hacer click abre un [role="dialog"] con un <input> de búsqueda dentro.
+    //
+    // ⚠️  IMPORTANTE: el selector CSS aquí es IDÉNTICO al de productoTrigger.
+    // Para distinguirlos, el Page Object usa cy.contains('Seleccione un cliente')
+    // en lugar de cy.get(SEL.nuevoDocumento.clienteTrigger). Esto también evita
+    // el error "page updated while clicking" causado por re-renders de MobX.
+    clienteTrigger: combine(
+      '[data-testid="nd-cliente-trigger"]',
+      'button[role="combobox"][aria-haspopup="dialog"]',
+    ),
+
+    // ── Paso 3 › Productos ────────────────────────────────────────────────
+    // DOM real: <button role="combobox" aria-haspopup="dialog">
+    //   <span class="text-muted-foreground">Buscar y agregar producto...</span>
+    // Mismo patrón que clienteTrigger — abre un dialog con input de búsqueda.
+    //
+    // ⚠️  IMPORTANTE: usar cy.contains('Buscar y agregar producto') en lugar de
+    // cy.get(SEL.nuevoDocumento.productoTrigger) para resiliencia ante re-renders.
+    productoTrigger: combine(
+      '[data-testid="nd-producto-trigger"]',
+      'button[role="combobox"][aria-haspopup="dialog"]',
+    ),
+  },
+
   // ─── Mi Empresa ───────────────────────────────────────────────────────────
   company: {
     form: '[data-testid="company-form"]',
